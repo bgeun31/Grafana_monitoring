@@ -1,0 +1,39 @@
+---
+- name: Create compose stack directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - "{{ monitoring_root }}/grafana"
+    - "{{ monitoring_root }}/grafana/provisioning"
+    - "{{ monitoring_root }}/grafana/provisioning/datasources"
+    - "{{ monitoring_root }}/grafana/provisioning/dashboards"
+    - "{{ monitoring_root }}/grafana/dashboards"
+    - "{{ monitoring_root }}/prometheus"
+
+- name: Copy monitoring stack files
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../../docker/"
+    dest: "{{ monitoring_root }}/"
+    owner: root
+    group: root
+    mode: preserve
+
+- name: Render compose environment
+  ansible.builtin.template:
+    src: stack.env.j2
+    dest: "{{ monitoring_root }}/.env"
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Start Grafana + Prometheus stack
+  ansible.builtin.command: docker compose up -d
+  args:
+    chdir: "{{ monitoring_root }}"
+  register: compose_up
+  changed_when: "'Started' in compose_up.stdout or 'Creating' in compose_up.stdout or 'Recreating' in compose_up.stdout"
+

@@ -1,0 +1,9 @@
+---
+- name: Build monitoring baseline
+  hosts: monitoring
+  become: true
+  roles:
+    - role: common
+    - role: docker
+    - role: grafana_stack
+

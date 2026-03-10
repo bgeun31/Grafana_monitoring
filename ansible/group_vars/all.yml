@@ -1,0 +1,12 @@
+---
+monitoring_root: /opt/monitoring
+
+docker_packages:
+  - docker.io
+  - docker-compose-plugin
+
+docker_target_user: "{{ ansible_user | default('ubuntu') }}"
+
+grafana_admin_user: admin
+grafana_admin_password: change-me
+
