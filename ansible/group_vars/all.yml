@@ -8,5 +8,5 @@ docker_packages:
 docker_target_user: "{{ ansible_user | default('ubuntu') }}"
 
 grafana_admin_user: admin
-grafana_admin_password: change-me
+grafana_admin_password: gtni14!$
 
